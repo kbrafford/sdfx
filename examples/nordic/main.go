@@ -8,7 +8,8 @@ Nordic NRF52DK Board Mounting Kit
 
 package main
 
-import . "github.com/deadsy/sdfx/sdf"
+//import . "github.com/deadsy/sdfx/sdf"
+import . "../../../sdfx/sdf"
 
 //-----------------------------------------------------------------------------
 
@@ -32,25 +33,40 @@ const MIL = (25.4 / 1000.0)
 // multiple standoffs
 func standoffs() SDF3 {
 
-	k := &StandoffParms{
+	k_holes := &StandoffParms{
 		PillarHeight:   pillar_height,
 		PillarDiameter: 6.0,
 		HoleDepth:      10.0,
 		HoleDiameter:   2.4, // #4 screw
 	}
 
+	k_pins := &StandoffParms{
+		PillarHeight:   pillar_height,
+		PillarDiameter: 6.0,
+		HoleDepth:      10.0,
+		HoleDiameter:   -2.4, // alignment pin
+	}
+
 	z_ofs := 0.5 * (pillar_height + base_thickness)
 
 	// from the board gerbers
-	positions := V3Set{
+	positions_holes := V3Set{
 		{550.0 * MIL, 300.0 * MIL, z_ofs},
-		{600.0 * MIL, 2200.0 * MIL, z_ofs},
+		//{600.0 * MIL, 2200.0 * MIL, z_ofs},
 		{2600.0 * MIL, 1600.0 * MIL, z_ofs},
 		{2600.0 * MIL, 500.0 * MIL, z_ofs},
 		{3800.0 * MIL, 300.0 * MIL, z_ofs},
 	}
 
-	return Standoffs3D(k, positions)
+	positions_pins := V3Set{
+		//{550.0 * MIL, 300.0 * MIL, z_ofs},
+		{600.0 * MIL, 2200.0 * MIL, z_ofs},
+		//{2600.0 * MIL, 1600.0 * MIL, z_ofs},
+		//{2600.0 * MIL, 500.0 * MIL, z_ofs},
+		//{3800.0 * MIL, 300.0 * MIL, z_ofs},
+	}
+
+	return Union3D(Standoffs3D(k_holes, positions_holes), Standoffs3D(k_pins, positions_pins))
 }
 
 //-----------------------------------------------------------------------------
@@ -89,7 +105,7 @@ func base() SDF3 {
 //-----------------------------------------------------------------------------
 
 func main() {
-	RenderSTL(ScaleUniform3D(base(), shrink), 300, "nrf52dk.stl")
+	RenderSTL(ScaleUniform3D(base(), shrink), 1200, "nrf52dk.stl")
 }
 
 //-----------------------------------------------------------------------------
