@@ -105,7 +105,7 @@ func base() SDF3 {
 //-----------------------------------------------------------------------------
 
 func main() {
-	RenderSTL(ScaleUniform3D(base(), shrink), 1200, "nrf52dk.stl")
+	RenderSTL(ScaleUniform3D(base(), shrink), 300, "nrf52dk.stl")
 }
 
 //-----------------------------------------------------------------------------
