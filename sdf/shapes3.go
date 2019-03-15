@@ -213,7 +213,6 @@ func Standoff3D(k *StandoffParms) SDF3 {
 		s0 = Difference3D(Union3D(pillar(k), pillarWebs(k)), pillarHole(k))
 	} else {
 		s0 = Union3D(Union3D(pillar(k), pillarWebs(k)), pillarCapsule(k))
-		//s0 = Union3D(pillar(k), pillarCapsule(k))
 	}
 	if k.NumberWebs != 0 {
 		// Cut off any part of the webs that protrude from the top of the pillar
