@@ -194,9 +194,27 @@ func pillarHole(k *StandoffParms) SDF3 {
 	return Transform3D(s, Translate3d(V3{0, 0, zOfs}))
 }
 
+// pillar capsule
+func pillarCapsule(k *StandoffParms) SDF3 {
+	if k.HoleDiameter == 0.0 || k.HoleDepth == 0.0 {
+		return nil
+	}
+	s := Cylinder3D(k.HoleDepth + (-2*k.HoleDiameter), 0.5*(-k.HoleDiameter), -.5*k.HoleDiameter)
+	zOfs := 0.5 * (k.PillarHeight - k.HoleDepth)
+	return Transform3D(s, Translate3d(V3{0, 0, zOfs}))
+}
+
 // Standoff3D returns a single board standoff.
 func Standoff3D(k *StandoffParms) SDF3 {
-	s0 := Difference3D(Union3D(pillar(k), pillarWebs(k)), pillarHole(k))
+	var s0 SDF3	
+	// Positive hole diamater specifies a screw hole
+	// Negative hole diamater specifies an alignment pin
+	if k.HoleDiameter > 0.0 {
+		s0 = Difference3D(Union3D(pillar(k), pillarWebs(k)), pillarHole(k))
+	} else {
+		s0 = Union3D(Union3D(pillar(k), pillarWebs(k)), pillarCapsule(k))
+		//s0 = Union3D(pillar(k), pillarCapsule(k))
+	}
 	if k.NumberWebs != 0 {
 		// Cut off any part of the webs that protrude from the top of the pillar
 		s1 := Cylinder3D(k.PillarHeight, k.WebDiameter, 0)
