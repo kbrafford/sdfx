@@ -35,19 +35,10 @@ func standoffs() SDF3 {
 
 	k_holes := &StandoffParms{
 		PillarHeight:   pillar_height,
-		PillarDiameter: 6.0,
+		PillarDiameter: 7.0,
 		HoleDepth:      10.0,
-		HoleDiameter:   2.4, // #4 screw
+		HoleDiameter:   2.9, // #4 screw
 	}
-
-	k_pins := &StandoffParms{
-		PillarHeight:   pillar_height,
-		PillarDiameter: 6.0,
-		HoleDepth:      10.0,
-		HoleDiameter:   -2.4, // alignment pin
-	}
-
-	z_ofs := 0.5 * (pillar_height + base_thickness)
 
 	// from the board gerbers
 	positions_holes := V3Set{
@@ -56,6 +47,13 @@ func standoffs() SDF3 {
 		{2600.0 * MIL, 1600.0 * MIL, z_ofs},
 		{2600.0 * MIL, 500.0 * MIL, z_ofs},
 		{3800.0 * MIL, 300.0 * MIL, z_ofs},
+	}
+	
+	k_pins := &StandoffParms{
+		PillarHeight:   pillar_height,
+		PillarDiameter: 7.0,
+		HoleDepth:      10.0,
+		HoleDiameter:   -3.0, // alignment pin
 	}
 
 	positions_pins := V3Set{
@@ -66,7 +64,10 @@ func standoffs() SDF3 {
 		//{3800.0 * MIL, 300.0 * MIL, z_ofs},
 	}
 
-	return Union3D(Standoffs3D(k_holes, positions_holes), Standoffs3D(k_pins, positions_pins))
+	z_ofs := 0.5 * (pillar_height + base_thickness)
+
+	return Union3D(Standoffs3D(k_holes, positions_holes),
+	               Standoffs3D(k_pins, positions_pins))
 }
 
 //-----------------------------------------------------------------------------
@@ -105,7 +106,7 @@ func base() SDF3 {
 //-----------------------------------------------------------------------------
 
 func main() {
-	RenderSTL(ScaleUniform3D(base(), shrink), 300, "nrf52dk.stl")
+	RenderSTL(ScaleUniform3D(base(), shrink), 600, "nrf52dk.stl")
 }
 
 //-----------------------------------------------------------------------------
